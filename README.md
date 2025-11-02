@@ -104,7 +104,8 @@ messages:
   alert_afk: '&6[NoAFK] &e%player% &7is now &6AFK&7.'
   alerts_enabled: '&aAFK alerts reception &6enabled&7.'
   alerts_disabled: '&cAFK alerts reception &6disabled&7.'
-  reload_done: '&aConfiguration reloaded.'```
+  reload_done: '&aConfiguration reloaded.'
+
 
 Messages support Minecraft color codes (&a, &c, etc.) and the %player% placeholder.
 
