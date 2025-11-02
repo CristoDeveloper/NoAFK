@@ -109,46 +109,46 @@ messages:
 
 Messages support Minecraft color codes (&a, &c, etc.) and the %player% placeholder.
 
-📊 PlaceholderAPI
+## 📊 PlaceholderAPI
 Available placeholders:
 
-%noafk_afk% → true/false if the player is AFK
+- %noafk_afk% → true/false if the player is AFK
 
-%noafk_time% → Current AFK time in seconds
+- %noafk_time% → Current AFK time in seconds
 
-%noafk_total% → Total AFK time in seconds
+- %noafk_total% → Total AFK time in seconds
 
-🚀 Installation
-Place NoAFK.jar in the plugins folder
+## 🚀 Installation
+- Place NoAFK.jar in the plugins folder
 
-Start the server (config.yml will be generated automatically)
+- Start the server (config.yml will be generated automatically)
 
-Configure settings in plugins/NoAFK/config.yml
+- Configure settings in plugins/NoAFK/config.yml
 
-Reload with /afkreload if needed
+- Reload with /afkreload if needed
 
-⚠ Compatibility
-Spigot/Paper 1.19+ → Full support
+## ⚠ Compatibility
+- Spigot/Paper 1.19+ → Full support
 
-Bukkit Vanilla → Limited support
+- Bukkit Vanilla → Limited support
 
-Forge/Fabric → Not supported
+- Forge/Fabric → Not supported
 
-Bungee/Velocity → Redirect supported via "BungeeCord" channel
+- Bungee/Velocity → Redirect supported via "BungeeCord" channel
 
-💡 Technical Notes
-AFK check runs every 2 seconds (40 ticks)
+## 💡 Technical Notes
+- AFK check runs every 2 seconds (40 ticks)
 
-Heavy operations run asynchronously
+- Heavy operations run asynchronously
 
-Uses ConcurrentHashMap for thread safety
+- Uses ConcurrentHashMap for thread safety
 
-Minimal memory usage (~10KB per player)
+- Minimal memory usage (~10KB per player)
 
-AFK data is not persistent on disk
+- AFK data is not persistent on disk
 
-📄 License
+## 📄 License
 MIT License
 
-🛠 Support
+## 🛠 Support
 For bug reports or support, contact the author: crxsto
