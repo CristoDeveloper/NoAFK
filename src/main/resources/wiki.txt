@@ -1,0 +1,417 @@
+================================================================================
+                              NOAFK PLUGIN - DOCUMENTATION
+================================================================================
+
+TABLE OF CONTENTS:
+1. GENERAL DESCRIPTION
+2. MAIN FEATURES
+3. AVAILABLE COMMANDS
+4. PERMISSIONS SYSTEM
+5. CONFIGURATION (config.yml)
+6. AUTOMATIC ACTIONS
+7. PLACEHOLDERS (PlaceholderAPI)
+8. TECHNICAL NOTES AND COMPATIBILITY
+
+================================================================================
+1. GENERAL DESCRIPTION
+================================================================================
+
+NoAFK is a plugin for Spigot/Paper servers that automatically manages players'
+AFK (Away From Keyboard) status. The plugin monitors player activity through
+movement and chat, executing configurable actions when a player becomes inactive.
+
+VERSION: 1.0.0
+AUTHOR: crxsto
+MINECRAFT API: 1.19+
+DEPENDENCIES: PlaceholderAPI (optional but recommended)
+
+================================================================================
+2. MAIN FEATURES
+================================================================================
+
+2.1 AUTOMATIC AFK DETECTION
+- Player movement monitoring
+- Chat activity monitoring
+- Configurable timer for AFK status activation
+- Configurable movement threshold to exit AFK status
+
+2.2 MANUAL AFK MANAGEMENT
+- Command to manually set AFK status
+- Ability for admins to set other players as AFK
+- Display AFK status of all online players
+
+2.3 NOTIFICATION SYSTEM
+- Customizable messages for AFK entry/exit
+- Alert system to notify staff when a player goes AFK
+- Support for Minecraft color codes (&a, &c, etc.)
+
+2.4 AUTOMATIC ACTIONS
+- Execute custom commands when a player goes AFK
+- Automatic kick of AFK players
+- Automatic redirect to Bungee/Velocity servers
+- Automatic teleportation to specific locations
+
+2.5 STATISTICS AND TRACKING
+- Track total AFK time per player
+- Track current session AFK time
+- PlaceholderAPI integration to display statistics
+
+================================================================================
+3. AVAILABLE COMMANDS
+================================================================================
+
+3.1 /afk [player]
+DESCRIPTION: Sets AFK status for yourself or other players
+USAGE: 
+  - /afk                    → Set yourself as AFK
+  - /afk <player>          → Set another player as AFK
+REQUIRED PERMISSIONS:
+  - noafk.afk.self         → To set yourself AFK
+  - noafk.afk.others       → To set other players AFK
+TAB COMPLETION: Yes (online player names)
+
+3.2 /afkstatus
+DESCRIPTION: Shows the list of all currently AFK players
+USAGE: /afkstatus
+REQUIRED PERMISSIONS: noafk.afkstatus
+OUTPUT: List of AFK players with inactivity time
+
+3.3 /afkreload
+DESCRIPTION: Reloads the plugin configuration
+USAGE: /afkreload
+REQUIRED PERMISSIONS: noafk.reload
+EFFECT: Reloads config.yml and applies new settings
+
+3.4 /noafk <subcommand>
+DESCRIPTION: Main plugin command with various subcommands
+AVAILABLE SUBCOMMANDS:
+  - alerts                 → Toggle AFK notifications
+  - updateconfig           → Update config.yml with new keys
+USAGE:
+  - /noafk alerts          → Toggle AFK notifications
+  - /noafk updateconfig    → Update configuration
+REQUIRED PERMISSIONS:
+  - noafk.alerts           → For alerts subcommand
+  - noafk.updateconfig     → For updateconfig subcommand
+
+================================================================================
+4. PERMISSIONS SYSTEM
+================================================================================
+
+4.1 MAIN PERMISSIONS
+
+noafk.afk.self
+- DESCRIPTION: Allows setting yourself as AFK with /afk
+- DEFAULT: false
+- USAGE: Regular players who want to go AFK manually
+
+noafk.afk.others
+- DESCRIPTION: Allows setting other players as AFK
+- DEFAULT: false
+- USAGE: Staff/Admin to manage other players' AFK status
+
+noafk.afkstatus
+- DESCRIPTION: Allows viewing the list of AFK players
+- DEFAULT: true
+- USAGE: All players can see who is AFK
+
+noafk.reload
+- DESCRIPTION: Allows reloading the plugin configuration
+- DEFAULT: false
+- USAGE: Admin to reload config without server restart
+
+noafk.alerts
+- DESCRIPTION: Allows receiving notifications when someone goes AFK
+- DEFAULT: true
+- USAGE: Staff who want to be notified of AFK activity
+
+noafk.updateconfig
+- DESCRIPTION: Allows updating config.yml with new keys
+- DEFAULT: false
+- USAGE: Admin to automatically update configuration
+
+4.2 RECOMMENDED PERMISSION SETUP
+- Regular players: noafk.afk.self, noafk.afkstatus, noafk.alerts
+- Moderators: + noafk.afk.others
+- Admins: all permissions
+
+================================================================================
+5. CONFIGURATION (config.yml)
+================================================================================
+
+5.1 MAIN AFK SETTINGS
+
+afk.time: 300
+- DESCRIPTION: Time in seconds before a player is considered AFK
+- DEFAULT VALUE: 300 (5 minutes)
+- RECOMMENDED RANGE: 60-1800 seconds
+
+afk.commands: []
+- DESCRIPTION: List of commands to execute when a player goes AFK
+- PLACEHOLDER: %player% is replaced with the player's name
+- EXAMPLE: ["say %player% is AFK!", "broadcast %player% went away"]
+
+afk.commands_enabled: true
+- DESCRIPTION: Enable/disable automatic command execution
+- VALUES: true/false
+- DEFAULT: true
+
+5.2 AUTOMATIC KICK SYSTEM
+
+afk.kick_enabled: false
+- DESCRIPTION: Enable automatic kick of AFK players
+- VALUES: true/false
+- DEFAULT: false
+
+afk.kick_reason: "You have been kicked for being AFK."
+- DESCRIPTION: Message shown when a player is kicked
+- PLACEHOLDER: %player% for player name
+- SUPPORTS: Minecraft color codes (&a, &c, etc.)
+
+5.3 BUNGEE/VELOCITY REDIRECT
+
+afk.bungee_redirect_enabled: false
+- DESCRIPTION: Enable automatic redirect to Bungee/Velocity server
+- VALUES: true/false
+- DEFAULT: false
+
+afk.bungee_server: "lobby"
+- DESCRIPTION: Target server name for redirect
+- VALUE: Server name configured in Bungee/Velocity
+- DEFAULT: "lobby"
+
+5.4 TELEPORTATION SYSTEM
+
+commands.teleport.enabled: false
+- DESCRIPTION: Enable automatic teleportation when going AFK
+- VALUES: true/false
+- DEFAULT: false
+
+commands.teleport.world: "world"
+- DESCRIPTION: Target world name
+- VALUE: Existing world name on the server
+- DEFAULT: "world"
+
+commands.teleport.x: 0.5
+commands.teleport.y: 64.0
+commands.teleport.z: 0.5
+- DESCRIPTION: Target teleportation coordinates
+- VALUES: Numeric coordinates (decimals supported)
+- DEFAULT: 0.5, 64.0, 0.5
+
+commands.teleport.yaw: 0.0
+commands.teleport.pitch: 0.0
+- DESCRIPTION: Player rotation after teleportation
+- VALUES: Degrees (0.0-360.0 for yaw, -90.0-90.0 for pitch)
+- DEFAULT: 0.0, 0.0
+
+5.5 ACTIVITY DETECTION
+
+types: ["movement", "chat"]
+- DESCRIPTION: Types of activity monitored for AFK detection
+- POSSIBLE VALUES: "movement", "chat"
+- DEFAULT: both active
+- NOTE: Removing a type disables that detection method
+
+movement.blocks: 5
+- DESCRIPTION: Minimum blocks to travel to exit AFK
+- VALUE: Positive integer
+- DEFAULT: 5
+- NOTE: Distance calculated as straight line from initial AFK position
+
+5.6 LOGGING AND DEBUG
+
+log: true
+- DESCRIPTION: Enable AFK activity logging to console
+- VALUES: true/false
+- DEFAULT: true
+- UTILITY: Debug and activity monitoring
+
+5.7 CUSTOMIZABLE MESSAGES
+
+All messages support:
+- Minecraft color codes (&a, &c, &e, etc.)
+- %player% placeholder for player name
+- %target% placeholder for target player (admin commands)
+- %time% placeholder for AFK time in seconds
+
+MAIN MESSAGES:
+- messages.afk_enter: Message when entering AFK
+- messages.afk_exit: Generic message when exiting AFK
+- messages.afk_exit_movement: Message when exiting AFK by movement
+- messages.afk_exit_chat: Message when exiting AFK by chat
+- messages.alert_afk: Notification message for staff
+- messages.no_permission: Error message for insufficient permissions
+
+================================================================================
+6. AUTOMATIC ACTIONS
+================================================================================
+
+6.1 AFK ACTIVATION SEQUENCE
+When a player becomes AFK, the plugin executes the following actions in order:
+
+1. KICK VERIFICATION
+   - If afk.kick_enabled = true, player is kicked
+   - If kicked, subsequent actions are interrupted
+
+2. BUNGEE/VELOCITY REDIRECT
+   - If afk.bungee_redirect_enabled = true, player is transferred
+   - Supports both Bungee and Velocity via "BungeeCord" channel
+
+3. TELEPORTATION
+   - If commands.teleport.enabled = true, player is teleported
+   - Saves original position for statistics
+
+4. COMMAND EXECUTION
+   - If afk.commands_enabled = true, executes commands in afk.commands
+   - Commands are executed by console with maximum privileges
+
+5. NOTIFICATIONS
+   - Sends AFK entry message to player
+   - Sends notifications to staff who have enabled alerts
+
+6.2 AFK EXIT CONDITIONS
+
+MOVEMENT:
+- Player must move at least movement.blocks blocks
+- Distance calculated from initial AFK position
+- World change counts as maximum movement
+
+CHAT:
+- Any chat message (if "chat" type is enabled)
+- Includes commands and normal messages
+
+MANUAL:
+- Using /afk command when already AFK
+- Admin action with /afk <player>
+
+6.3 SCHEDULER AND PERFORMANCE
+- AFK check runs every 2 seconds (40 ticks)
+- Heavy operations are executed asynchronously
+- Player actions are synchronized with main thread
+
+================================================================================
+7. PLACEHOLDERS (PlaceholderAPI)
+================================================================================
+
+7.1 PLACEHOLDERAPI INTEGRATION
+The plugin automatically integrates with PlaceholderAPI if present.
+Identifier: noafk
+
+7.2 AVAILABLE PLACEHOLDERS
+
+%noafk_afk%
+- DESCRIPTION: Returns true/false if player is AFK
+- VALUES: "true" or "false"
+- USAGE: Conditions, scoreboard, chat format
+
+%noafk_time%
+- DESCRIPTION: Current AFK time in seconds
+- VALUE: Integer number (0 if not AFK)
+- USAGE: Show how long player has been AFK
+
+%noafk_total%
+- DESCRIPTION: Total accumulated AFK time in seconds
+- VALUE: Integer number (sum of all AFK sessions)
+- USAGE: Player statistics, leaderboards
+
+7.3 USAGE EXAMPLES
+
+SCOREBOARD:
+- "AFK: %noafk_afk%"
+- "AFK Time: %noafk_time%s"
+- "Total AFK: %noafk_total%s"
+
+CHAT FORMAT:
+- "[AFK] %player%" (if %noafk_afk% = true)
+
+CONDITIONS (with plugins like ConditionalEvents):
+- %noafk_afk% = true → Execute specific action
+
+================================================================================
+8. TECHNICAL NOTES AND COMPATIBILITY
+================================================================================
+
+8.1 SYSTEM REQUIREMENTS
+- Minecraft Server: Spigot/Paper 1.19+
+- Java: 8+ (recommended 11+)
+- RAM: Minimal impact (<1MB for 100 players)
+- PlaceholderAPI: Optional but recommended
+
+8.2 SERVER COMPATIBILITY
+
+SPIGOT/PAPER:
+- Fully supported
+- All features available
+
+VANILLA BUKKIT:
+- Limited support
+- PlaceholderAPI might not work
+
+FORGE/FABRIC:
+- Not supported
+- Requires Bukkit-based server
+
+8.3 PROXY COMPATIBILITY
+
+BUNGEE/WATERFALL:
+- Redirect supported via "BungeeCord" channel
+- Configure afk.bungee_redirect_enabled = true
+
+VELOCITY:
+- Supported via Bungee compatibility mode
+- Enable BungeeCord channel in Velocity
+
+8.4 KNOWN ISSUES AND SOLUTIONS
+
+ISSUE: Placeholders not working
+SOLUTION: Verify PlaceholderAPI is installed and updated
+
+ISSUE: Bungee redirect not working
+SOLUTION: Verify BungeeCord channel is registered in proxy
+
+ISSUE: Teleportation fails
+SOLUTION: Verify specified world exists and is loaded
+
+ISSUE: Commands not executing
+SOLUTION: Verify command syntax and console permissions
+
+8.5 PERFORMANCE AND OPTIMIZATION
+
+MONITORING:
+- Plugin uses asynchronous operations to reduce lag
+- AFK checks every 2 seconds (configurable in code)
+- Uses ConcurrentHashMap for thread-safety
+
+OPTIMIZATIONS:
+- Disable unnecessary detection types
+- Increase afk.time for servers with many players
+- Disable logging if not needed
+
+MEMORY:
+- ~10KB per online player
+- AFK data cleaned on disconnection
+- No disk persistence (resets on restart)
+
+8.6 UPDATES AND MAINTENANCE
+
+CONFIG UPDATES:
+- Use /noafk updateconfig to add new keys
+- Plugin maintains existing settings
+
+BACKUP:
+- Backup config.yml before updates
+- AFK data is not permanently saved
+
+MONITORING:
+- Check logs for configuration errors
+- Test features after each update
+
+================================================================================
+END OF DOCUMENTATION - NoAFK Plugin v1.0.0
+================================================================================
+
+For technical support or bug reports, contact the author: crxsto
+Last modified: [File creation date]
+
+NOTE: This documentation must be updated with every plugin modification.

@@ -1,0 +1,71 @@
+############################################################
+# NoAFK - Configuration
+# Base version, fully configurable
+############################################################
+
+# AFK Settings
+afk:
+  time: 300
+  commands:
+    - "say %player% is AFK!"
+  # Enable/disable automatic command execution when entering AFK
+  commands_enabled: true
+  # If true, the player gets kicked when entering AFK
+  kick_enabled: false
+  # Kick reason (supports %player%)
+  kick_reason: "You have been kicked for being AFK."
+  # If true, the player gets redirected to a Bungee server when entering AFK
+  bungee_redirect_enabled: false
+  # Target Bungee server name
+  bungee_server: "lobby"
+
+# Extra actions when entering AFK
+commands:
+  teleport:
+    enabled: false
+    # World and coordinates where to teleport the player when entering AFK
+    world: "world"
+    x: 0.5
+    y: 64.0
+    z: 0.5
+    # Optional Yaw/Pitch
+    yaw: 0.0
+    pitch: 0.0
+
+# AFK detection types: movement, chat
+types:
+  - movement
+  - chat
+
+movement:
+  # Minimum blocks to travel to exit AFK
+  blocks: 5
+
+# Console logging
+log: true
+
+# Customizable messages
+messages:
+  no_permission: "&cYou don't have permission."
+  player_not_found: "&cPlayer not found."
+  only_player: "&cOnly players can use this command."
+
+  afk_enter: "&eYou are now &6AFK&7."
+  afk_exit: "&aYou are no longer AFK."
+  afk_exit_movement: "&aYou are no longer AFK (&bmovement&a)."
+  afk_exit_chat: "&aYou are no longer AFK (&bchat&a)."
+  afk_set_other: "&e%target% has been set AFK."
+  afk_set_self: "&eYou are now AFK."
+  afk_already_other: "&e%target% is already AFK."
+  afk_already_self: "&eYou are already AFK."
+
+  status_header: "&6AFK Players:"
+  status_line: "&7- &e%player% &7(&b%time%s&7)"
+  status_none: "&7No AFK players."
+  # Alert message sent to subscribers when a player enters AFK
+  alert_afk: "&6[NoAFK] &e%player% &7is now &6AFK&7."
+  # Feedback messages for alerts toggle
+  alerts_enabled: "&aAFK alerts reception &6enabled&7."
+  alerts_disabled: "&cAFK alerts reception &6disabled&7."
+
+  reload_done: "&aConfiguration reloaded."

@@ -1,0 +1,43 @@
+name: NoAFK
+main: com.noafk.NoAFKPlugin
+version: 1.0.0
+api-version: "1.19"
+authors: ["crxsto"]
+description: Base NoAFK plugin (Spigot/Paper) with AFK movement/chat detection and PlaceholderAPI.
+depend: ["PlaceholderAPI"]
+
+commands:
+  afk:
+    description: Sets a player to AFK state.
+    usage: "/afk [player]"
+  afkstatus:
+    description: Shows the AFK status of online players.
+    usage: "/afkstatus"
+    permission: noafk.afkstatus
+  afkreload:
+    description: Reloads the plugin configuration.
+    usage: "/afkreload"
+    permission: noafk.reload
+  noafk:
+    description: Main NoAFK command.
+    usage: "/noafk alerts"
+
+permissions:
+  noafk.afk.self:
+    description: Allows setting yourself AFK with /afk.
+    default: false
+  noafk.afk.others:
+    description: Allows setting other players AFK.
+    default: false
+  noafk.afkstatus:
+    description: Allows viewing the AFK status of players.
+    default: true
+  noafk.reload:
+    description: Allows reloading the configuration.
+    default: false
+  noafk.alerts:
+    description: Allows using /noafk alerts to receive AFK notifications.
+    default: true
+  noafk.updateconfig:
+    description: Allows updating the config by adding new default keys.
+    default: false
